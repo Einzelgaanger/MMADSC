@@ -219,8 +219,8 @@ const PaymentModal = ({ isOpen, onClose, result }: PaymentModalProps) => {
 
           {step === "error" && (
             <div className="text-center py-8 space-y-4">
-              <div className="bg-red-500/20 w-14 h-14 rounded-full flex items-center justify-center mx-auto">
-                <AlertCircle className="w-8 h-8 text-red-400" />
+              <div className="bg-destructive/20 w-14 h-14 rounded-full flex items-center justify-center mx-auto">
+                <AlertCircle className="w-8 h-8 text-destructive" />
               </div>
               <h3 className="font-display font-bold text-lg text-foreground">
                 Something went wrong
