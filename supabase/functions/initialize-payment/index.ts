@@ -2,7 +2,7 @@ import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
-  'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
+  'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type, x-supabase-client-platform, x-supabase-client-platform-version, x-supabase-client-runtime, x-supabase-client-runtime-version',
 };
 
 serve(async (req) => {
@@ -25,7 +25,6 @@ serve(async (req) => {
       throw new Error('PAYSTACK_SECRET_KEY is not configured');
     }
 
-    // Amount in kobo/cents — $14.99 USD = 1499 cents
     const response = await fetch('https://api.paystack.co/transaction/initialize', {
       method: 'POST',
       headers: {
@@ -34,7 +33,7 @@ serve(async (req) => {
       },
       body: JSON.stringify({
         email,
-        amount: 1499, // $14.99 in cents
+        amount: 1499,
         currency: 'USD',
         metadata: {
           wallet_address: walletAddress,
@@ -47,7 +46,7 @@ serve(async (req) => {
 
     if (!paystackRes.status) {
       console.error('Paystack initialization failed:', paystackRes);
-      return new Response(JSON.stringify({ error: 'Payment initialization failed' }), {
+      return new Response(JSON.stringify({ error: 'Payment initialization failed', details: paystackRes.message }), {
         status: 500,
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },
       });
