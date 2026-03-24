@@ -5,15 +5,16 @@ import WalletInput from "@/components/WalletInput";
 import ScoreDisplay from "@/components/ScoreDisplay";
 import ActivityBreakdown from "@/components/ActivityBreakdown";
 import CTASection from "@/components/CTASection";
+import PaymentModal from "@/components/PaymentModal";
 import { analyzeWallet, type ScoringResult } from "@/lib/scoring";
 
 const Index = () => {
   const [result, setResult] = useState<ScoringResult | null>(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [showPayment, setShowPayment] = useState(false);
 
   const handleCheck = async (address: string) => {
     setIsLoading(true);
-    // Simulate network delay
     await new Promise((r) => setTimeout(r, 1800));
     const scoring = analyzeWallet(address);
     setResult(scoring);
@@ -120,7 +121,7 @@ const Index = () => {
 
                 <ScoreDisplay result={result} />
                 <ActivityBreakdown activities={result.activities} />
-                <CTASection />
+                <CTASection onOpenPayment={() => setShowPayment(true)} />
               </motion.div>
             )}
           </AnimatePresence>
@@ -134,6 +135,15 @@ const Index = () => {
           </div>
         </footer>
       </div>
+
+      {/* Payment Modal */}
+      {result && (
+        <PaymentModal
+          isOpen={showPayment}
+          onClose={() => setShowPayment(false)}
+          result={result}
+        />
+      )}
     </div>
   );
 };
