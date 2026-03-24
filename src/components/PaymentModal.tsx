@@ -199,8 +199,8 @@ const PaymentModal = ({ isOpen, onClose, result }: PaymentModalProps) => {
 
           {step === "success" && (
             <div className="text-center py-8 space-y-4">
-              <div className="bg-green-500/20 w-14 h-14 rounded-full flex items-center justify-center mx-auto">
-                <CheckCircle className="w-8 h-8 text-green-400" />
+              <div className="bg-primary/20 w-14 h-14 rounded-full flex items-center justify-center mx-auto">
+                <CheckCircle className="w-8 h-8 text-primary" />
               </div>
               <h3 className="font-display font-bold text-lg text-foreground">
                 Report Downloaded!
