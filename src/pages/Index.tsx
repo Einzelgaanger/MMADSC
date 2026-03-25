@@ -1,10 +1,11 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { ArrowLeft, ExternalLink } from "lucide-react";
+import { ArrowLeft } from "lucide-react";
 import WalletInput from "@/components/WalletInput";
 import ScoreDisplay from "@/components/ScoreDisplay";
 import ActivityBreakdown from "@/components/ActivityBreakdown";
 import CTASection from "@/components/CTASection";
+import PricingSection, { type PricingTier } from "@/components/PricingSection";
 import PaymentModal from "@/components/PaymentModal";
 import ScannerAnimation from "@/components/ScannerAnimation";
 import { analyzeWallet, type ScoringResult } from "@/lib/scoring";
@@ -13,6 +14,7 @@ const Index = () => {
   const [result, setResult] = useState<ScoringResult | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [showPayment, setShowPayment] = useState(false);
+  const [selectedTier, setSelectedTier] = useState<PricingTier>("pro");
 
   const handleCheck = async (address: string) => {
     setIsLoading(true);
@@ -24,44 +26,38 @@ const Index = () => {
 
   const handleReset = () => setResult(null);
 
+  const handleSelectTier = (tier: PricingTier) => {
+    setSelectedTier(tier);
+    setShowPayment(true);
+  };
+
   return (
     <div className="min-h-screen bg-background relative">
-      {/* Layered background */}
-      <div className="fixed inset-0 pointer-events-none">
-        <div className="absolute inset-0 bg-grid-subtle opacity-30" />
-        <div className="absolute inset-0 bg-noise" />
-        {/* Gradient orbs */}
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[900px] h-[600px] rounded-full"
-          style={{ background: "radial-gradient(ellipse, hsl(25 100% 58% / 0.06) 0%, transparent 70%)" }} />
-        <div className="absolute top-[40%] -right-[200px] w-[600px] h-[600px] rounded-full"
-          style={{ background: "radial-gradient(circle, hsl(175 80% 48% / 0.04) 0%, transparent 70%)" }} />
-        <div className="absolute bottom-0 left-0 w-[500px] h-[500px] rounded-full"
-          style={{ background: "radial-gradient(circle, hsl(260 60% 50% / 0.03) 0%, transparent 70%)" }} />
-      </div>
+      {/* Background mesh */}
+      <div className="fixed inset-0 pointer-events-none bg-mesh" />
+      <div className="fixed inset-0 pointer-events-none bg-dots opacity-40" />
 
       <div className="relative z-10">
         {/* Nav */}
-        <nav className="border-b border-border/40">
-          <div className="flex items-center justify-between px-6 lg:px-8 py-4 max-w-6xl mx-auto">
-            <div className="flex items-center gap-6">
-              <div className="flex items-center gap-2">
-                <div className="w-8 h-8 rounded-lg bg-primary/15 border border-primary/20 flex items-center justify-center">
-                  <span className="font-display font-bold text-primary text-sm">M</span>
+        <nav className="border-b border-border bg-card/80 backdrop-blur-lg sticky top-0 z-20">
+          <div className="flex items-center justify-between px-6 lg:px-8 py-3.5 max-w-6xl mx-auto">
+            <div className="flex items-center gap-5">
+              <div className="flex items-center gap-2.5">
+                <div className="w-8 h-8 rounded-lg bg-primary flex items-center justify-center">
+                  <span className="font-display font-bold text-primary-foreground text-sm">M</span>
                 </div>
-                <span className="font-display font-semibold text-[15px] text-foreground">
+                <span className="font-display font-bold text-[16px] text-foreground">
                   MetaDrop
                 </span>
               </div>
-              <div className="hidden md:flex items-center gap-1 bg-secondary/60 border border-border/50 rounded-full px-3 py-1">
-                <span className="w-1.5 h-1.5 rounded-full bg-green-400 animate-pulse-glow" />
-                <span className="text-muted-foreground text-[11px] font-body">Live</span>
+              <div className="hidden md:flex items-center gap-1 bg-green-50 border border-green-200 rounded-full px-2.5 py-0.5">
+                <span className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse" />
+                <span className="text-green-700 text-[11px] font-body font-medium">Live</span>
               </div>
             </div>
-            <div className="flex items-center gap-4">
-              <span className="hidden sm:inline text-muted-foreground text-[11px] font-body">
-                Not affiliated with MetaMask
-              </span>
-            </div>
+            <span className="hidden sm:inline text-muted-foreground text-[11px] font-body">
+              Not affiliated with MetaMask or ConsenSys
+            </span>
           </div>
         </nav>
 
@@ -87,9 +83,8 @@ const Index = () => {
                     className="max-w-3xl mx-auto text-center"
                   >
                     {/* Badge */}
-                    <div className="inline-flex items-center gap-2 border border-primary/20 rounded-full px-3.5 py-1 mb-8"
-                      style={{ background: "linear-gradient(135deg, hsl(25 100% 58% / 0.08), hsl(25 100% 58% / 0.02))" }}>
-                      <span className="w-1.5 h-1.5 rounded-full bg-primary animate-pulse-glow" />
+                    <div className="inline-flex items-center gap-2 border border-primary/20 rounded-full px-3.5 py-1 mb-8 bg-primary/5">
+                      <span className="w-1.5 h-1.5 rounded-full bg-primary animate-pulse" />
                       <span className="text-primary text-[11px] font-display font-medium uppercase tracking-[0.12em]">
                         Pre-announcement tracker
                       </span>
@@ -97,7 +92,7 @@ const Index = () => {
 
                     {/* Title */}
                     <h1 className="font-display font-bold text-[2.75rem] md:text-[3.75rem] lg:text-[4.25rem] leading-[1.05] tracking-tight">
-                      <span className="text-gradient-hero">Check your eligibility</span>
+                      <span className="text-foreground">Check your eligibility</span>
                       <br />
                       <span className="text-gradient-primary">for the MetaMask Airdrop</span>
                     </h1>
@@ -119,7 +114,7 @@ const Index = () => {
                     <WalletInput onSubmit={handleCheck} isLoading={isLoading} />
                   </motion.div>
 
-                  {/* Social proof bar */}
+                  {/* Social proof */}
                   <motion.div
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
@@ -140,11 +135,10 @@ const Index = () => {
                       <span>12,400+ wallets checked</span>
                     </div>
 
-                    {/* Data sources */}
                     <div className="flex items-center justify-center gap-2 mt-6 flex-wrap">
-                      <span className="text-muted-foreground/30 text-[10px] font-body mr-1">Powered by</span>
+                      <span className="text-muted-foreground/50 text-[10px] font-body mr-1">Powered by</span>
                       {["Etherscan", "Alchemy", "Moralis", "The Graph", "DefiLlama"].map((s) => (
-                        <span key={s} className="text-[10px] font-mono text-muted-foreground/30 bg-muted/40 px-2 py-0.5 rounded border border-border/30">
+                        <span key={s} className="text-[10px] font-mono text-muted-foreground bg-secondary px-2 py-0.5 rounded border border-border">
                           {s}
                         </span>
                       ))}
@@ -152,7 +146,7 @@ const Index = () => {
                   </motion.div>
                 </div>
 
-                {/* How it works section */}
+                {/* How it works */}
                 <motion.div
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
@@ -161,24 +155,12 @@ const Index = () => {
                 >
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                     {[
-                      {
-                        step: "01",
-                        title: "Paste your address",
-                        desc: "Enter any Ethereum address — we only use public on-chain data.",
-                      },
-                      {
-                        step: "02",
-                        title: "Multi-chain analysis",
-                        desc: "We scan activity across Ethereum, Linea, Polygon, Arbitrum & more.",
-                      },
-                      {
-                        step: "03",
-                        title: "Get your score",
-                        desc: "See your eligibility tier, activity breakdown, and boost actions.",
-                      },
+                      { step: "01", title: "Paste your address", desc: "Enter any Ethereum address — we only use public on-chain data." },
+                      { step: "02", title: "Multi-chain analysis", desc: "We scan activity across Ethereum, Linea, Polygon, Arbitrum & more." },
+                      { step: "03", title: "Get your score", desc: "See your eligibility tier, activity breakdown, and boost actions." },
                     ].map((item) => (
-                      <div key={item.step} className="glass-card rounded-xl p-5 group hover:border-primary/15 transition-colors">
-                        <span className="text-primary/40 font-mono text-[11px] font-medium">{item.step}</span>
+                      <div key={item.step} className="glass-card rounded-xl p-5 group hover:border-primary/20 transition-colors">
+                        <span className="text-primary font-mono text-[11px] font-medium">{item.step}</span>
                         <h3 className="font-display font-semibold text-foreground text-[14px] mt-2">{item.title}</h3>
                         <p className="text-muted-foreground text-[12px] font-body mt-1.5 leading-relaxed">{item.desc}</p>
                       </div>
@@ -205,30 +187,31 @@ const Index = () => {
 
                 <ScoreDisplay result={result} />
                 <ActivityBreakdown activities={result.activities} />
-                <CTASection onOpenPayment={() => setShowPayment(true)} />
+                <PricingSection onSelectTier={handleSelectTier} />
+                <CTASection />
               </motion.div>
             )}
           </AnimatePresence>
         </main>
 
         {/* Footer */}
-        <footer className="border-t border-border/30">
+        <footer className="border-t border-border bg-card/50">
           <div className="max-w-6xl mx-auto px-6 lg:px-8 py-8 flex flex-col md:flex-row items-center justify-between gap-4">
             <div className="flex items-center gap-4">
               <div className="flex items-center gap-2">
-                <div className="w-5 h-5 rounded bg-primary/10 flex items-center justify-center">
-                  <span className="font-display font-bold text-primary text-[8px]">M</span>
+                <div className="w-5 h-5 rounded bg-primary flex items-center justify-center">
+                  <span className="font-display font-bold text-primary-foreground text-[8px]">M</span>
                 </div>
-                <span className="text-muted-foreground/40 text-[11px] font-body">
+                <span className="text-muted-foreground text-[11px] font-body">
                   © 2026 MetaDrop
                 </span>
               </div>
-              <span className="w-px h-3 bg-border/30" />
-              <span className="text-muted-foreground/30 text-[11px] font-body">
+              <span className="w-px h-3 bg-border" />
+              <span className="text-muted-foreground/60 text-[11px] font-body">
                 Speculative analysis — not financial advice
               </span>
             </div>
-            <span className="text-muted-foreground/25 text-[11px] font-body">
+            <span className="text-muted-foreground/50 text-[11px] font-body">
               Not affiliated with MetaMask or ConsenSys
             </span>
           </div>
@@ -240,6 +223,7 @@ const Index = () => {
           isOpen={showPayment}
           onClose={() => setShowPayment(false)}
           result={result}
+          tier={selectedTier}
         />
       )}
     </div>
