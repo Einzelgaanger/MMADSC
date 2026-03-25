@@ -2,12 +2,11 @@ import { motion } from "framer-motion";
 import { Hexagon } from "lucide-react";
 
 const steps = [
-  "Connecting to Etherscan API...",
-  "Fetching transaction history...",
-  "Scanning multi-chain activity...",
-  "Analyzing DeFi interactions...",
-  "Checking Linea network...",
-  "Calculating eligibility score...",
+  "Querying Etherscan API",
+  "Fetching multi-chain data",
+  "Analyzing DeFi activity",
+  "Scanning Linea network",
+  "Computing eligibility score",
 ];
 
 const ScannerAnimation = () => {
@@ -17,68 +16,82 @@ const ScannerAnimation = () => {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
-      className="pt-32 md:pt-40 flex flex-col items-center"
+      className="pt-36 md:pt-44 flex flex-col items-center max-w-sm mx-auto"
     >
-      {/* Animated hex logo */}
-      <div className="relative mb-10">
+      {/* Animated rings */}
+      <div className="relative w-24 h-24 mb-10">
+        <motion.div
+          animate={{ rotate: 360 }}
+          transition={{ duration: 4, repeat: Infinity, ease: "linear" }}
+          className="absolute inset-0 rounded-full border border-primary/15"
+        />
+        <motion.div
+          animate={{ rotate: -360 }}
+          transition={{ duration: 6, repeat: Infinity, ease: "linear" }}
+          className="absolute inset-2 rounded-full border border-primary/25"
+        />
         <motion.div
           animate={{ rotate: 360 }}
           transition={{ duration: 3, repeat: Infinity, ease: "linear" }}
-          className="w-20 h-20 flex items-center justify-center"
-        >
-          <Hexagon className="w-20 h-20 text-primary/30" strokeWidth={1} />
-        </motion.div>
-        <motion.div
-          animate={{ rotate: -360 }}
-          transition={{ duration: 5, repeat: Infinity, ease: "linear" }}
-          className="absolute inset-0 flex items-center justify-center"
-        >
-          <Hexagon className="w-12 h-12 text-primary/60" strokeWidth={1.5} />
-        </motion.div>
+          className="absolute inset-4 rounded-full border border-primary/10"
+        />
         <div className="absolute inset-0 flex items-center justify-center">
           <motion.div
-            animate={{ scale: [1, 1.2, 1] }}
-            transition={{ duration: 1.5, repeat: Infinity }}
-            className="w-3 h-3 rounded-full bg-primary"
-          />
+            animate={{ scale: [1, 1.15, 1], opacity: [0.5, 1, 0.5] }}
+            transition={{ duration: 2, repeat: Infinity }}
+            className="w-8 h-8 rounded-lg bg-primary/15 border border-primary/20 flex items-center justify-center"
+          >
+            <span className="font-display font-bold text-primary text-sm">M</span>
+          </motion.div>
         </div>
       </div>
 
-      <h3 className="font-display font-bold text-xl text-foreground mb-2">
+      <h3 className="font-display font-semibold text-base text-foreground mb-1">
         Analyzing Wallet
       </h3>
-      <p className="text-muted-foreground text-sm font-body mb-8">
-        Scanning on-chain data across multiple sources
+      <p className="text-muted-foreground/60 text-[12px] font-body mb-8">
+        Scanning across multiple data sources
       </p>
 
-      {/* Animated steps */}
-      <div className="space-y-2 w-full max-w-xs">
+      {/* Steps */}
+      <div className="space-y-2.5 w-full">
         {steps.map((step, i) => (
           <motion.div
             key={step}
-            initial={{ opacity: 0, x: -10 }}
+            initial={{ opacity: 0, x: -8 }}
             animate={{ opacity: 1, x: 0 }}
-            transition={{ delay: i * 0.35 }}
-            className="flex items-center gap-2.5"
+            transition={{ delay: i * 0.4 }}
+            className="flex items-center gap-3"
           >
             <motion.div
               initial={{ scale: 0 }}
               animate={{ scale: 1 }}
-              transition={{ delay: i * 0.35 + 0.2 }}
-              className="w-1.5 h-1.5 rounded-full bg-primary shrink-0"
-            />
-            <span className="text-muted-foreground text-xs font-body">{step}</span>
+              transition={{ delay: i * 0.4 + 0.25 }}
+            >
+              <div className="w-5 h-5 rounded border border-primary/20 bg-primary/5 flex items-center justify-center">
+                <motion.svg
+                  initial={{ pathLength: 0, opacity: 0 }}
+                  animate={{ pathLength: 1, opacity: 1 }}
+                  transition={{ delay: i * 0.4 + 0.3, duration: 0.3 }}
+                  className="w-3 h-3 text-primary" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5}
+                >
+                  <motion.path d="M5 13l4 4L19 7" strokeLinecap="round" strokeLinejoin="round" />
+                </motion.svg>
+              </div>
+            </motion.div>
+            <span className="text-muted-foreground text-[12px] font-body">{step}</span>
           </motion.div>
         ))}
       </div>
 
-      {/* Progress bar */}
-      <div className="w-full max-w-xs mt-8 h-1 bg-secondary rounded-full overflow-hidden">
+      {/* Progress */}
+      <div className="w-full mt-8 h-[3px] bg-muted rounded-full overflow-hidden">
         <motion.div
           initial={{ width: "0%" }}
           animate={{ width: "100%" }}
           transition={{ duration: 2.2, ease: "easeInOut" }}
-          className="h-full bg-gradient-to-r from-primary to-accent rounded-full"
+          className="h-full rounded-full"
+          style={{ background: "linear-gradient(90deg, hsl(25 100% 58%), hsl(175 80% 48%))" }}
         />
       </div>
     </motion.div>
