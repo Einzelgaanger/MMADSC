@@ -1,19 +1,10 @@
 import { motion } from "framer-motion";
-import { Check, X, ExternalLink, ChevronRight } from "lucide-react";
+import { Check, ExternalLink, ChevronRight } from "lucide-react";
 import type { WalletActivity } from "@/lib/scoring";
 
 interface ActivityBreakdownProps {
   activities: WalletActivity[];
 }
-
-const categoryIcons: Record<string, string> = {
-  swap: "🔄",
-  bridge: "🌉",
-  staking: "📈",
-  governance: "🗳️",
-  nft: "🖼️",
-  usage: "⚡",
-};
 
 const ActivityBreakdown = ({ activities }: ActivityBreakdownProps) => {
   const detected = activities.filter((a) => a.detected);
@@ -21,44 +12,39 @@ const ActivityBreakdown = ({ activities }: ActivityBreakdownProps) => {
 
   return (
     <motion.div
-      initial={{ opacity: 0, y: 20 }}
+      initial={{ opacity: 0, y: 16 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ delay: 0.2, duration: 0.4 }}
-      className="w-full max-w-2xl mx-auto space-y-6"
+      transition={{ delay: 0.15, duration: 0.4 }}
+      className="w-full max-w-2xl mx-auto"
     >
-      {/* Section header */}
-      <div className="flex items-center gap-3">
-        <h2 className="font-display font-bold text-lg text-foreground">Activity Breakdown</h2>
-        <div className="flex-1 h-px bg-border/50" />
-        <span className="text-muted-foreground/50 text-[11px] font-body">
-          {detected.length}/{activities.length} detected
+      {/* Header */}
+      <div className="flex items-center justify-between mb-4">
+        <h2 className="font-display font-semibold text-[15px] text-foreground">Activity Breakdown</h2>
+        <span className="text-muted-foreground/40 text-[11px] font-mono">
+          {detected.length}/{activities.length}
         </span>
       </div>
 
-      {/* Detected Activities */}
+      {/* Detected */}
       {detected.length > 0 && (
-        <div>
-          <h3 className="font-display font-medium text-sm text-foreground/70 mb-2.5 flex items-center gap-2">
-            <div className="w-5 h-5 rounded-md bg-green-400/10 flex items-center justify-center">
-              <Check className="w-3 h-3 text-green-400" />
-            </div>
-            Detected ({detected.length})
-          </h3>
-          <div className="space-y-1.5">
+        <div className="mb-5">
+          <p className="text-[11px] font-body text-muted-foreground/50 uppercase tracking-wider mb-2">Detected</p>
+          <div className="space-y-1">
             {detected.map((activity, i) => (
               <motion.div
                 key={activity.id}
-                initial={{ opacity: 0, x: -8 }}
+                initial={{ opacity: 0, x: -6 }}
                 animate={{ opacity: 1, x: 0 }}
-                transition={{ delay: 0.3 + i * 0.04 }}
-                className="glass-card rounded-xl px-4 py-3 flex items-center gap-3 hover:border-green-400/20 transition-colors"
+                transition={{ delay: 0.2 + i * 0.03 }}
+                className="flex items-center gap-3 px-4 py-2.5 rounded-lg bg-muted/30 border border-border/30 hover:border-border/50 transition-colors group"
               >
-                <span className="text-base">{categoryIcons[activity.category]}</span>
-                <div className="flex-1 min-w-0">
-                  <p className="font-display font-medium text-foreground text-sm">{activity.label}</p>
-                  <p className="text-muted-foreground/60 text-[11px] font-body truncate">{activity.description}</p>
+                <div className="w-5 h-5 rounded border border-green-400/20 bg-green-400/5 flex items-center justify-center shrink-0">
+                  <Check className="w-3 h-3 text-green-400" />
                 </div>
-                <span className="text-green-400 bg-green-400/10 px-2 py-0.5 rounded-md text-[11px] font-display font-semibold shrink-0">
+                <div className="flex-1 min-w-0">
+                  <p className="font-display font-medium text-foreground/90 text-[13px]">{activity.label}</p>
+                </div>
+                <span className="text-green-400/70 text-[11px] font-mono shrink-0">
                   +{activity.weight}
                 </span>
               </motion.div>
@@ -67,31 +53,26 @@ const ActivityBreakdown = ({ activities }: ActivityBreakdownProps) => {
         </div>
       )}
 
-      {/* Missing — Boost Your Score */}
+      {/* Missing */}
       {missing.length > 0 && (
         <div>
-          <h3 className="font-display font-medium text-sm text-foreground/70 mb-2.5 flex items-center gap-2">
-            <div className="w-5 h-5 rounded-md bg-primary/10 flex items-center justify-center">
-              <ChevronRight className="w-3 h-3 text-primary" />
-            </div>
-            Actions to Boost Score ({missing.length})
-          </h3>
-          <div className="space-y-1.5">
+          <p className="text-[11px] font-body text-muted-foreground/50 uppercase tracking-wider mb-2">Boost your score</p>
+          <div className="space-y-1">
             {missing.map((activity, i) => (
               <motion.div
                 key={activity.id}
-                initial={{ opacity: 0, x: -8 }}
+                initial={{ opacity: 0, x: -6 }}
                 animate={{ opacity: 1, x: 0 }}
-                transition={{ delay: 0.5 + i * 0.04 }}
-                className="glass-card rounded-xl px-4 py-3 flex items-center gap-3 border-primary/10 hover:border-primary/25 transition-colors"
+                transition={{ delay: 0.35 + i * 0.03 }}
+                className="flex items-center gap-3 px-4 py-2.5 rounded-lg border border-border/20 hover:border-primary/15 transition-colors group"
               >
-                <span className="text-base opacity-40">{categoryIcons[activity.category]}</span>
+                <div className="w-5 h-5 rounded border border-border/30 flex items-center justify-center shrink-0">
+                  <ChevronRight className="w-3 h-3 text-muted-foreground/30" />
+                </div>
                 <div className="flex-1 min-w-0">
-                  <p className="font-display font-medium text-muted-foreground text-sm">{activity.label}</p>
+                  <p className="font-display font-medium text-muted-foreground/60 text-[13px]">{activity.label}</p>
                   {activity.boostAction && (
-                    <p className="text-primary/70 text-[11px] font-body flex items-center gap-1 mt-0.5">
-                      {activity.boostAction}
-                    </p>
+                    <p className="text-primary/50 text-[11px] font-body mt-0.5">{activity.boostAction}</p>
                   )}
                 </div>
                 {activity.boostLink ? (
@@ -99,12 +80,12 @@ const ActivityBreakdown = ({ activities }: ActivityBreakdownProps) => {
                     href={activity.boostLink}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="flex items-center gap-1 text-primary text-[11px] font-display font-semibold hover:underline shrink-0"
+                    className="flex items-center gap-1 text-primary/60 text-[11px] font-display font-medium hover:text-primary transition-colors shrink-0"
                   >
                     Go <ExternalLink className="w-3 h-3" />
                   </a>
                 ) : (
-                  <span className="text-muted-foreground/30 text-[11px] font-display shrink-0">
+                  <span className="text-muted-foreground/20 text-[11px] font-mono shrink-0">
                     +{activity.weight}
                   </span>
                 )}
