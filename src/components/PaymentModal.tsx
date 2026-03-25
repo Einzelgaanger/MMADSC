@@ -1,8 +1,8 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { Shield, Loader2, X, CheckCircle, AlertCircle, Zap, Crown, RefreshCw, FileText } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
-import { generateReport } from "@/lib/generatePDF";
 import type { ScoringResult } from "@/lib/scoring";
 import type { PricingTier } from "./PricingSection";
 import tierBasicImg from "@/assets/tier-basic.png";
@@ -30,6 +30,7 @@ const PaymentModal = ({ isOpen, onClose, result, tier }: PaymentModalProps) => {
   const [email, setEmail] = useState("");
   const [step, setStep] = useState<Step>("email");
   const [errorMsg, setErrorMsg] = useState("");
+  const navigate = useNavigate();
   const meta = tierMeta[tier];
 
   const handlePurchase = async () => {
@@ -66,8 +67,12 @@ const PaymentModal = ({ isOpen, onClose, result, tier }: PaymentModalProps) => {
               });
             }
 
-            generateReport(reportData.report);
+            // Navigate to the in-platform report page
             setStep("success");
+            setTimeout(() => {
+              handleClose();
+              navigate(`/report/${reference}`);
+            }, 1500);
           }
         } catch {
           // still polling
@@ -137,7 +142,7 @@ const PaymentModal = ({ isOpen, onClose, result, tier }: PaymentModalProps) => {
 
               <div>
                 <label className="text-muted-foreground text-[10px] font-body block mb-1.5 uppercase tracking-wider font-medium">
-                  Email for report delivery
+                  Email for your account
                 </label>
                 <input
                   type="email"
@@ -158,7 +163,7 @@ const PaymentModal = ({ isOpen, onClose, result, tier }: PaymentModalProps) => {
 
               <p className="text-center text-muted-foreground/50 text-[10px] font-body flex items-center justify-center gap-1.5">
                 <Shield className="w-3 h-3" />
-                Secure payment · 256-bit encryption
+                Secure payment · Report unlocks instantly in-platform
               </p>
             </div>
           )}
@@ -183,19 +188,10 @@ const PaymentModal = ({ isOpen, onClose, result, tier }: PaymentModalProps) => {
               <div className="w-14 h-14 rounded-2xl bg-green-50 border border-green-200 flex items-center justify-center mx-auto">
                 <CheckCircle className="w-6 h-6 text-green-600" />
               </div>
-              <h3 className="font-display font-bold text-base text-foreground">Report Downloaded!</h3>
+              <h3 className="font-display font-bold text-base text-foreground">Report Ready!</h3>
               <p className="text-muted-foreground text-[12px] font-body">
-                {tier === "insider"
-                  ? "Check your downloads. Weekly updates will arrive at your email."
-                  : "Check your downloads folder for the PDF report."
-                }
+                Opening your premium analytics dashboard...
               </p>
-              <button
-                onClick={handleClose}
-                className="bg-secondary border border-border text-foreground px-6 py-2.5 rounded-xl font-display font-medium text-[13px] hover:bg-secondary/80 transition-colors"
-              >
-                Done
-              </button>
             </div>
           )}
 
