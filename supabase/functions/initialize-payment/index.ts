@@ -1,4 +1,5 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
+import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -35,6 +36,99 @@ serve(async (req) => {
     const pricing = tierPricing[tier] || tierPricing.pro;
     const finalAmount = amount || pricing.amount;
 
+    // For Insider tier, create a Paystack subscription plan
+    if (tier === 'insider') {
+      // First, create or get the plan
+      let planCode: string | null = null;
+
+      // Check if plan exists
+      const plansRes = await fetch('https://api.paystack.co/plan', {
+        headers: { 'Authorization': `Bearer ${PAYSTACK_SECRET_KEY}` },
+      });
+      const plansData = await plansRes.json();
+      const existingPlan = plansData.data?.find((p: any) => p.name === 'MetaDrop Insider Weekly');
+
+      if (existingPlan) {
+        planCode = existingPlan.plan_code;
+      } else {
+        // Create the plan
+        const createPlanRes = await fetch('https://api.paystack.co/plan', {
+          method: 'POST',
+          headers: {
+            'Authorization': `Bearer ${PAYSTACK_SECRET_KEY}`,
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            name: 'MetaDrop Insider Weekly',
+            amount: finalAmount,
+            interval: 'monthly',
+            currency: 'USD',
+            description: 'Weekly AI-powered wallet analysis reports with airdrop intelligence',
+          }),
+        });
+        const createPlanData = await createPlanRes.json();
+        if (createPlanData.status) {
+          planCode = createPlanData.data.plan_code;
+        }
+      }
+
+      // Initialize transaction with plan
+      const body: any = {
+        email,
+        amount: finalAmount,
+        currency: 'USD',
+        plan: planCode,
+        metadata: {
+          wallet_address: walletAddress,
+          product: pricing.label,
+          tier: 'insider',
+          subscription: true,
+        },
+      };
+
+      const response = await fetch('https://api.paystack.co/transaction/initialize', {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${PAYSTACK_SECRET_KEY}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(body),
+      });
+
+      const paystackRes = await response.json();
+
+      if (!paystackRes.status) {
+        console.error('Paystack initialization failed:', paystackRes);
+        return new Response(JSON.stringify({ error: 'Payment initialization failed', details: paystackRes.message }), {
+          status: 500,
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+        });
+      }
+
+      // Store subscription record
+      const supabaseUrl = Deno.env.get('SUPABASE_URL')!;
+      const supabaseKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
+      const supabase = createClient(supabaseUrl, supabaseKey);
+
+      await supabase.from('subscriptions').insert({
+        email,
+        wallet_address: walletAddress,
+        plan: 'insider',
+        status: 'pending',
+        amount_usd: 29.99,
+      });
+
+      return new Response(JSON.stringify({
+        authorization_url: paystackRes.data.authorization_url,
+        access_code: paystackRes.data.access_code,
+        reference: paystackRes.data.reference,
+        subscription: true,
+      }), {
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      });
+    }
+
+    // One-time payment for basic/pro/elite
     const body: any = {
       email,
       amount: finalAmount,
@@ -45,12 +139,6 @@ serve(async (req) => {
         tier,
       },
     };
-
-    // For insider (subscription), use Paystack plan if available
-    // Otherwise treat as one-time for now
-    if (tier === 'insider') {
-      body.metadata.subscription = true;
-    }
 
     const response = await fetch('https://api.paystack.co/transaction/initialize', {
       method: 'POST',

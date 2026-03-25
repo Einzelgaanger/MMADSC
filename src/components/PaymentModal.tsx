@@ -46,6 +46,7 @@ const PaymentModal = ({ isOpen, onClose, result, tier }: PaymentModalProps) => {
       }
 
       const reference = data.reference;
+      const isSubscription = data.subscription === true;
       const paymentWindow = window.open(data.authorization_url, "_blank", "width=600,height=700");
 
       const pollInterval = setInterval(async () => {
@@ -57,6 +58,14 @@ const PaymentModal = ({ isOpen, onClose, result, tier }: PaymentModalProps) => {
           if (reportData?.report) {
             clearInterval(pollInterval);
             if (paymentWindow && !paymentWindow.closed) paymentWindow.close();
+
+            // For subscriptions, activate the subscription record
+            if (isSubscription) {
+              await supabase.functions.invoke("manage-subscription", {
+                body: { action: "check", email },
+              });
+            }
+
             generateReport(reportData.report);
             setStep("success");
           }
