@@ -5,13 +5,20 @@ const corsHeaders = {
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type, x-supabase-client-platform, x-supabase-client-platform-version, x-supabase-client-runtime, x-supabase-client-runtime-version',
 };
 
+const tierPricing: Record<string, { amount: number; label: string }> = {
+  basic: { amount: 999, label: "MetaDrop Basic Report" },
+  pro: { amount: 4999, label: "MetaDrop Pro Report" },
+  elite: { amount: 9999, label: "MetaDrop Elite Report" },
+  insider: { amount: 2999, label: "MetaDrop Insider Weekly (Monthly)" },
+};
+
 serve(async (req) => {
   if (req.method === 'OPTIONS') {
     return new Response(null, { headers: corsHeaders });
   }
 
   try {
-    const { email, walletAddress } = await req.json();
+    const { email, walletAddress, tier = "pro", amount } = await req.json();
 
     if (!email || !walletAddress) {
       return new Response(JSON.stringify({ error: 'Email and wallet address are required' }), {
@@ -25,21 +32,33 @@ serve(async (req) => {
       throw new Error('PAYSTACK_SECRET_KEY is not configured');
     }
 
+    const pricing = tierPricing[tier] || tierPricing.pro;
+    const finalAmount = amount || pricing.amount;
+
+    const body: any = {
+      email,
+      amount: finalAmount,
+      currency: 'USD',
+      metadata: {
+        wallet_address: walletAddress,
+        product: pricing.label,
+        tier,
+      },
+    };
+
+    // For insider (subscription), use Paystack plan if available
+    // Otherwise treat as one-time for now
+    if (tier === 'insider') {
+      body.metadata.subscription = true;
+    }
+
     const response = await fetch('https://api.paystack.co/transaction/initialize', {
       method: 'POST',
       headers: {
         'Authorization': `Bearer ${PAYSTACK_SECRET_KEY}`,
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({
-        email,
-        amount: 1499,
-        currency: 'USD',
-        metadata: {
-          wallet_address: walletAddress,
-          product: 'MetaDrop Premium Report',
-        },
-      }),
+      body: JSON.stringify(body),
     });
 
     const paystackRes = await response.json();
