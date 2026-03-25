@@ -50,6 +50,54 @@ export type Database = {
         }
         Relationships: []
       }
+      subscriptions: {
+        Row: {
+          amount_usd: number
+          cancelled_at: string | null
+          created_at: string
+          email: string
+          id: string
+          next_charge_date: string | null
+          paystack_authorization_code: string | null
+          paystack_customer_code: string | null
+          paystack_subscription_code: string | null
+          plan: string
+          status: string
+          updated_at: string
+          wallet_address: string
+        }
+        Insert: {
+          amount_usd?: number
+          cancelled_at?: string | null
+          created_at?: string
+          email: string
+          id?: string
+          next_charge_date?: string | null
+          paystack_authorization_code?: string | null
+          paystack_customer_code?: string | null
+          paystack_subscription_code?: string | null
+          plan?: string
+          status?: string
+          updated_at?: string
+          wallet_address: string
+        }
+        Update: {
+          amount_usd?: number
+          cancelled_at?: string | null
+          created_at?: string
+          email?: string
+          id?: string
+          next_charge_date?: string | null
+          paystack_authorization_code?: string | null
+          paystack_customer_code?: string | null
+          paystack_subscription_code?: string | null
+          plan?: string
+          status?: string
+          updated_at?: string
+          wallet_address?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
