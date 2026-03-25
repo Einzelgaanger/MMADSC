@@ -213,22 +213,31 @@ const Index = () => {
 
         {/* Footer */}
         <footer className="border-t border-border bg-card/60 backdrop-blur-sm">
-          <div className="max-w-6xl mx-auto px-6 lg:px-8 py-8 flex flex-col md:flex-row items-center justify-between gap-4">
-            <div className="flex items-center gap-4">
-              <div className="flex items-center gap-2">
-                <img src={metadropLogo} alt="MetaDrop" className="w-6 h-6 object-contain" loading="lazy" width={24} height={24} />
-                <span className="text-muted-foreground text-[12px] font-display font-medium">
-                  © 2026 MetaDrop
+          <div className="max-w-6xl mx-auto px-6 lg:px-8 py-8">
+            <div className="flex flex-col md:flex-row items-center justify-between gap-4 mb-4">
+              <div className="flex items-center gap-4">
+                <div className="flex items-center gap-2">
+                  <img src={metadropLogo} alt="MetaDrop" className="w-6 h-6 object-contain" loading="lazy" width={24} height={24} />
+                  <span className="text-muted-foreground text-[12px] font-display font-medium">
+                    © 2026 MetaDrop
+                  </span>
+                </div>
+                <span className="w-px h-3 bg-border" />
+                <span className="text-muted-foreground/60 text-[11px] font-body">
+                  Speculative analysis — not financial advice
                 </span>
               </div>
-              <span className="w-px h-3 bg-border" />
-              <span className="text-muted-foreground/60 text-[11px] font-body">
-                Speculative analysis — not financial advice
-              </span>
+              <div className="flex items-center gap-4 text-[11px] font-body">
+                <Link to="/terms" className="text-muted-foreground hover:text-foreground transition-colors">Terms of Service</Link>
+                <span className="w-px h-3 bg-border" />
+                <Link to="/privacy" className="text-muted-foreground hover:text-foreground transition-colors">Privacy Policy</Link>
+                <span className="w-px h-3 bg-border" />
+                <Link to="/manage-subscription" className="text-muted-foreground hover:text-foreground transition-colors">Manage Subscription</Link>
+              </div>
             </div>
-            <span className="text-muted-foreground/50 text-[11px] font-body">
+            <p className="text-center text-muted-foreground/50 text-[10px] font-body">
               Not affiliated with MetaMask or ConsenSys
-            </span>
+            </p>
           </div>
         </footer>
       </div>
