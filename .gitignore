@@ -12,6 +12,16 @@ dist
 dist-ssr
 *.local
 
+# Environment — never commit secrets (anon key in VITE_ is still public in bundle; keep out of git for hygiene & rotation)
+.env
+.env.*
+!.env.example
+
+# Certificates & keys
+*.pem
+*.p12
+*.key
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json
