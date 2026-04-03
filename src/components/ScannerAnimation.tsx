@@ -1,5 +1,4 @@
 import { motion } from "framer-motion";
-import { Hexagon } from "lucide-react";
 
 const steps = [
   "Querying Etherscan API",
@@ -16,7 +15,7 @@ const ScannerAnimation = () => {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
-      className="pt-36 md:pt-44 flex flex-col items-center max-w-sm mx-auto"
+      className="pt-24 sm:pt-32 md:pt-40 pb-8 flex flex-col items-center max-w-md mx-auto px-4"
     >
       {/* Animated rings */}
       <div className="relative w-24 h-24 mb-10">
@@ -46,11 +45,11 @@ const ScannerAnimation = () => {
         </div>
       </div>
 
-      <h3 className="font-display font-semibold text-base text-foreground mb-1">
-        Analyzing Wallet
+      <h3 className="font-display font-semibold text-lg sm:text-xl text-foreground mb-1 text-center">
+        Analyzing wallet
       </h3>
-      <p className="text-muted-foreground/60 text-[12px] font-body mb-8">
-        Scanning across multiple data sources
+      <p className="text-muted-foreground text-[13px] font-body mb-8 text-center max-w-xs">
+        Querying public data sources and normalizing activity
       </p>
 
       {/* Steps */}

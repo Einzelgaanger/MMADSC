@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -6,35 +6,36 @@
 
 @layer base {
   :root {
-    --background: 220 16% 96%;
-    --foreground: 222 20% 12%;
+    --background: 222 18% 97%;
+    --foreground: 222 22% 11%;
 
     --card: 0 0% 100%;
-    --card-foreground: 222 20% 12%;
+    --card-foreground: 222 22% 11%;
 
     --popover: 0 0% 100%;
-    --popover-foreground: 222 20% 12%;
+    --popover-foreground: 222 22% 11%;
 
-    --primary: 25 95% 53%;
+    --primary: 24 92% 50%;
     --primary-foreground: 0 0% 100%;
 
-    --secondary: 220 14% 92%;
-    --secondary-foreground: 222 20% 25%;
+    --secondary: 222 16% 93%;
+    --secondary-foreground: 222 18% 22%;
 
-    --muted: 220 14% 94%;
-    --muted-foreground: 220 10% 42%;
+    --muted: 222 14% 95%;
+    --muted-foreground: 220 12% 40%;
 
-    --accent: 210 100% 50%;
-    --accent-foreground: 0 0% 100%;
+    /* Single accent family: warm neutrals for secondary surfaces (not a second brand color) */
+    --accent: 222 14% 92%;
+    --accent-foreground: 222 18% 22%;
 
     --destructive: 0 72% 51%;
     --destructive-foreground: 0 0% 100%;
 
-    --border: 220 13% 88%;
-    --input: 220 13% 88%;
-    --ring: 25 95% 53%;
+    --border: 222 14% 90%;
+    --input: 222 14% 90%;
+    --ring: 24 92% 50%;
 
-    --radius: 0.75rem;
+    --radius: 0.875rem;
 
     --sidebar-background: 0 0% 100%;
     --sidebar-foreground: 222 20% 12%;
@@ -64,6 +65,7 @@
     font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
   }
   h1, h2, h3, h4, h5, h6 {
     font-family: 'Space Grotesk', sans-serif;
@@ -73,17 +75,90 @@
 
 @layer utilities {
   .glass-card {
-    background: hsl(0 0% 100% / 0.75);
-    border: 1px solid hsl(220 13% 88% / 0.8);
+    background: hsl(0 0% 100% / 0.82);
+    border: 1px solid hsl(222 14% 90% / 0.85);
     backdrop-filter: blur(20px);
-    box-shadow: 0 1px 3px hsl(220 20% 20% / 0.04), 0 4px 12px hsl(220 20% 20% / 0.03);
+    box-shadow:
+      0 1px 2px hsl(222 22% 12% / 0.04),
+      0 8px 24px hsl(222 22% 12% / 0.04);
   }
 
   .glass-card-elevated {
-    background: hsl(0 0% 100% / 0.9);
-    border: 1px solid hsl(220 13% 88% / 0.6);
+    background: hsl(0 0% 100% / 0.92);
+    border: 1px solid hsl(222 14% 88% / 0.7);
     backdrop-filter: blur(24px);
-    box-shadow: 0 2px 8px hsl(220 20% 20% / 0.05), 0 8px 24px hsl(220 20% 20% / 0.06);
+    box-shadow:
+      0 2px 4px hsl(222 22% 12% / 0.04),
+      0 12px 40px hsl(222 22% 12% / 0.07);
+  }
+
+  .hero-surface {
+    background: linear-gradient(
+      165deg,
+      hsl(0 0% 100% / 0.92) 0%,
+      hsl(222 20% 99% / 0.88) 45%,
+      hsl(0 0% 100% / 0.75) 100%
+    );
+    border: 1px solid hsl(222 14% 90% / 0.9);
+    box-shadow:
+      0 1px 0 hsl(0 0% 100% / 0.8) inset,
+      0 24px 48px hsl(222 25% 15% / 0.06);
+  }
+
+  .hero-surface-pop {
+    box-shadow:
+      0 1px 0 hsl(0 0% 100% / 0.95) inset,
+      0 0 0 1px hsl(222 14% 88% / 0.45),
+      0 24px 56px hsl(260 35% 25% / 0.07),
+      0 0 100px hsl(24 90% 52% / 0.07);
+  }
+
+  .hero-input-dock {
+    background: linear-gradient(165deg, hsl(0 0% 100%) 0%, hsl(222 20% 99%) 100%);
+    border: 1px solid hsl(222 12% 88%);
+    box-shadow:
+      0 1px 0 hsl(0 0% 100% / 1) inset,
+      0 2px 4px hsl(222 22% 12% / 0.04),
+      0 28px 56px -16px hsl(222 25% 15% / 0.1);
+  }
+
+  .hero-input-dock-accent {
+    border-left: 3px solid hsl(var(--primary));
+  }
+
+  /* Inset well for the address field */
+  .input-panel-well {
+    background: linear-gradient(180deg, hsl(222 20% 12%) 0%, hsl(222 24% 7%) 100%);
+    box-shadow: inset 0 1px 2px hsl(0 0% 0% / 0.35);
+  }
+
+  /* Animated border for analysis panel */
+  .analysis-ring {
+    background: linear-gradient(
+      110deg,
+      hsl(24 92% 52%),
+      hsl(32 88% 58%),
+      hsl(24 78% 44%),
+      hsl(28 90% 50%),
+      hsl(24 92% 52%)
+    );
+    background-size: 220% 100%;
+    animation: analysis-ring-flow 6s ease-in-out infinite;
+  }
+
+  @keyframes analysis-ring-flow {
+    0%,
+    100% {
+      background-position: 0% 50%;
+    }
+    50% {
+      background-position: 100% 50%;
+    }
+  }
+
+  .bg-hex-mesh {
+    background-color: transparent;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='28' height='49' viewBox='0 0 28 49'%3E%3Cg fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.04'%3E%3Cpath d='M13.99 9.25l13 7.5v15l-13 7.5L1 31.75v-15l12.99-7.5zM3 17.9v12.7l10.99 6.34 11-6.35V17.9l-11-6.34L3 17.9zM0 15l12.98-7.5L26 15v19.49l-13 7.5L0 34.49V15'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
   }
 
   .glass-card-dark {
@@ -93,9 +168,9 @@
     box-shadow: 0 4px 20px hsl(222 20% 5% / 0.3);
   }
 
+  /* Headline accent — one hue only */
   .text-gradient-primary {
-    @apply bg-clip-text text-transparent;
-    background-image: linear-gradient(135deg, hsl(25 95% 53%), hsl(35 95% 60%));
+    color: hsl(24 90% 38%);
   }
 
   .text-gradient-hero {
@@ -110,14 +185,37 @@
 
   .bg-mesh {
     background:
-      radial-gradient(ellipse at 20% 0%, hsl(25 95% 53% / 0.06) 0%, transparent 60%),
-      radial-gradient(ellipse at 80% 20%, hsl(210 100% 50% / 0.04) 0%, transparent 60%),
-      radial-gradient(ellipse at 50% 80%, hsl(152 69% 41% / 0.03) 0%, transparent 60%);
+      radial-gradient(ellipse 80% 50% at 15% -10%, hsl(24 92% 50% / 0.07) 0%, transparent 55%),
+      radial-gradient(ellipse 60% 40% at 85% 10%, hsl(211 88% 50% / 0.05) 0%, transparent 50%),
+      radial-gradient(ellipse 70% 50% at 50% 100%, hsl(152 55% 45% / 0.04) 0%, transparent 55%);
+  }
+
+  /* Restrained background — warm paper + one soft pool of brand color */
+  .bg-home-aurora {
+    background:
+      radial-gradient(ellipse 90% 55% at 70% -15%, hsl(24 55% 92% / 0.55) 0%, transparent 52%),
+      radial-gradient(ellipse 70% 45% at 10% 80%, hsl(222 16% 92% / 0.9) 0%, transparent 50%),
+      hsl(222 16% 97%);
+  }
+
+  .bg-grid-fine {
+    background-image:
+      linear-gradient(hsl(222 14% 48% / 0.06) 1px, transparent 1px),
+      linear-gradient(90deg, hsl(222 14% 48% / 0.06) 1px, transparent 1px);
+    background-size: 48px 48px;
+    mask-image: radial-gradient(ellipse 100% 80% at 50% 30%, black 10%, transparent 70%);
+    opacity: 0.5;
   }
 
   .bg-dots {
-    background-image: radial-gradient(hsl(220 13% 80% / 0.5) 1px, transparent 1px);
-    background-size: 24px 24px;
+    background-image: radial-gradient(hsl(222 14% 72% / 0.45) 1px, transparent 1px);
+    background-size: 20px 20px;
+  }
+
+  .bg-noise {
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    opacity: 0.018;
+    mix-blend-mode: multiply;
   }
 
   .blur-content {
@@ -172,7 +270,7 @@
   }
 
   .font-mono {
-    font-family: 'JetBrains Mono', monospace;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
   }
 
   .animate-gradient {
